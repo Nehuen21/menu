@@ -23,23 +23,28 @@
        fuentes o tamaños en todo el sitio desde un solo lugar
     ============================================================ */
     :root {
-      --color-bg:       #0d0705;   /* fondo principal */
-      --color-bg-card:  #1a0c09;   /* fondo de cada card */
-      --color-red:      #8b1a1a;   /* rojo oscuro (acento) */
-      --color-red-glow: #c0392b;   /* rojo brillante (hover, bordes) */
-      --color-gold:     #f0c060;   /* dorado / títulos destacados */
-      --color-cream:    #f5f0e8;   /* texto principal */
-      --color-muted:    #a89080;   /* texto secundario */
-      --color-divider:  #3a1a10;   /* líneas separadoras */
+      --color-bg:       #0d0705;
+      --color-bg-card:  #1a0c09;
+      --color-red:      #8b1a1a;
+      --color-red-glow: #c0392b;
+      --color-gold:     #f0c060;
+      --color-cream:    #f5f0e8;
+      --color-muted:    #a89080;
+      --color-divider:  #3a1a10;
 
       --font-display: 'Bebas Neue', sans-serif;
       --font-body:    'Inter', sans-serif;
 
       --radius: 10px;
       --transition: 0.25s ease;
+
+      /* ── IMAGEN DE CARD ──────────────────────────────────────
+         Altura de la foto en cada card.
+         Cambiá este valor si querés fotos más altas o más bajas.
+      ───────────────────────────────────────────────────────── */
+      --card-img-height: 180px;
     }
 
-    /* ============================================================  RESET BÁSICO  ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -53,9 +58,7 @@
     img { display: block; max-width: 100%; }
 
     /* ============================================================
-       HERO — cabecera con efecto de "humo" animado en CSS puro.
-       El efecto usa pseudo-elementos con radial-gradient animados.
-       Para desactivarlo: poné .hero::before, .hero::after { display: none }
+       HERO
     ============================================================ */
     .hero {
       position: relative;
@@ -65,7 +68,6 @@
       background: radial-gradient(ellipse at 50% 120%, #5c0f0f 0%, #0d0705 65%);
     }
 
-    /* capa de "brasa" animada */
     .hero::before {
       content: '';
       position: absolute;
@@ -79,21 +81,12 @@
     }
 
     @keyframes brasasPulse {
-      0%   { transform: scaleY(1)   translateY(0);    opacity: 0.7; }
-      100% { transform: scaleY(1.1) translateY(-3%);  opacity: 1;   }
+      0%   { transform: scaleY(1)   translateY(0);   opacity: 0.7; }
+      100% { transform: scaleY(1.1) translateY(-3%); opacity: 1;   }
     }
 
-    /* reducción de movimiento para accesibilidad */
     @media (prefers-reduced-motion: reduce) {
       .hero::before { animation: none; }
-    }
-
-    .hero-logo {
-      width: 90px;
-      margin: 0 auto 1rem;
-      /* TODO (futuro): reemplazá este placeholder con la imagen del logo real.
-         Guardá el logo como "logo.png" en la misma carpeta que este index.html
-         y descomentá la etiqueta <img> en el HTML más abajo. */
     }
 
     .hero-eyebrow {
@@ -112,7 +105,6 @@
       color: var(--color-gold);
       letter-spacing: 0.04em;
       position: relative;
-      /* sombra de llama multicapa */
       text-shadow:
         0 0 40px rgba(220, 80, 10, 0.7),
         0 0 80px rgba(180, 40, 10, 0.4),
@@ -142,14 +134,15 @@
       position: relative;
     }
 
-    /* ============================================================  CONTENEDOR PRINCIPAL  ============================================================ */
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
     .container {
       max-width: 860px;
       margin: 0 auto;
       padding: 0 1.2rem 3rem;
     }
 
-    /* ============================================================  SECCIÓN DE ENCABEZADO  ============================================================ */
     .section-title {
       font-family: var(--font-display);
       font-size: clamp(1.6rem, 4vw, 2.4rem);
@@ -170,34 +163,109 @@
     }
 
     /* ============================================================
-       CARDS DE PLATOS
-       Grid de 1 columna en móvil, 2 en desktop
+       CARD GENÉRICA CON IMAGEN
+       ────────────────────────────────────────────────────────────
+       ESTRUCTURA HTML de cada card:
+
+         <div class="menu-card">
+           <div class="card-img-wrap">
+             <img
+               src="img/NOMBRE-DE-TU-FOTO.jpg"
+               alt="Descripción del plato"
+               class="card-img"
+               loading="lazy"
+             />
+           </div>
+           <div class="card-body">
+             <div class="card-header">
+               <span class="card-name">NOMBRE DEL PLATO</span>
+               <span class="card-price">$XX.XXX</span>
+             </div>
+             <p class="card-desc">Descripción del plato.</p>
+           </div>
+         </div>
+
+       PARA AGREGAR TU FOTO:
+         1. Guardá la imagen en la carpeta  img/  (creala si no existe).
+            Nombre sugerido sin espacios ni tildes, ej: pollo-frito.jpg
+         2. Cambiá el atributo src="img/TU-FOTO.jpg" en la card correspondiente.
+         3. Actualizá el atributo alt con una descripción breve (accesibilidad).
+
+       PLACEHOLDER (mientras no tenés foto):
+         Si el src apunta a un archivo inexistente, se muestra el gradiente
+         oscuro de fondo automáticamente — no rompe el diseño.
     ============================================================ */
     .menu-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
     @media (min-width: 600px) {
       .menu-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* Card contenedor */
     .menu-card {
       background: var(--color-bg-card);
       border: 1px solid var(--color-divider);
       border-radius: var(--radius);
-      padding: 1.25rem 1.4rem;
+      overflow: hidden;                         /* recorta la imagen a los bordes redondeados */
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
       transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
     }
 
     .menu-card:hover {
       border-color: var(--color-red-glow);
-      box-shadow: 0 0 18px rgba(192, 57, 43, 0.18);
-      transform: translateY(-2px);
+      box-shadow: 0 0 22px rgba(192, 57, 43, 0.2);
+      transform: translateY(-3px);
+    }
+
+    /* Zona de imagen — altura fija, la foto se recorta centrada */
+    .card-img-wrap {
+      width: 100%;
+      height: var(--card-img-height);           /* ← cambiá --card-img-height en :root para ajustar */
+      overflow: hidden;
+      background: linear-gradient(135deg, #2a0a05 0%, #1a0c09 100%); /* placeholder visible sin foto */
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* Icono de placeholder cuando no hay imagen */
+    .card-img-wrap::after {
+      content: '🍗';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;                        /* recorta y centra la foto sin deformarla */
+      object-position: center;                  /* cambiá a "top" o "bottom" si la foto lo necesita */
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    /* Zoom suave al hacer hover sobre la foto */
+    .menu-card:hover .card-img {
+      transform: scale(1.04);
+    }
+
+    /* Zona de texto bajo la imagen */
+    .card-body {
+      padding: 1rem 1.2rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
     }
 
     .card-header {
@@ -209,54 +277,52 @@
 
     .card-name {
       font-family: var(--font-display);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       letter-spacing: 0.08em;
       color: var(--color-cream);
       line-height: 1.1;
     }
 
-    /* ============================================================
-       PRECIOS — cada precio está hardcodeado como texto en el HTML.
-       PARA ACTUALIZAR UN PRECIO: buscá la etiqueta <span class="card-price">
-       correspondiente al plato y cambiá el número.
-       Ejemplo: <span class="card-price">$12.000</span>
-    ============================================================ */
+    /* ── PRECIO ─────────────────────────────────────────────────
+       Hardcodeado en el HTML. Para actualizar, buscá la línea:
+         <span class="card-price">$XX.XXX</span>
+       dentro de la card correspondiente y cambiá el número.
+    ───────────────────────────────────────────────────────────── */
     .card-price {
       font-family: var(--font-display);
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       color: var(--color-gold);
       white-space: nowrap;
       letter-spacing: 0.04em;
     }
 
     .card-desc {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: var(--color-muted);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* badge "Más Grande" como el del menú original */
     .badge-grande {
       display: inline-block;
       background: var(--color-red);
       color: var(--color-gold);
       font-family: var(--font-display);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       letter-spacing: 0.1em;
-      padding: 0.15rem 0.6rem;
+      padding: 0.15rem 0.55rem;
       border-radius: 2px;
-      margin-top: 0.2rem;
       align-self: flex-start;
+      margin-top: 0.2rem;
     }
 
     /* ============================================================
-       COMBOS — sección destacada con fondo especial
+       COMBOS
     ============================================================ */
     .combos-section {
       background: linear-gradient(135deg, #1f0808 0%, #150404 100%);
       border: 1px solid var(--color-red);
       border-radius: var(--radius);
-      padding: 1.6rem 1.4rem;
+      padding: 1.4rem;
       margin-top: 2rem;
     }
 
@@ -264,15 +330,15 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 0.8rem 0;
+      padding: 0.85rem 0;
       border-bottom: 1px solid var(--color-divider);
       gap: 1rem;
     }
-    .combo-item:last-child { border-bottom: none; }
+    .combo-item:last-child { border-bottom: none; padding-bottom: 0; }
 
     .combo-name {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       letter-spacing: 0.1em;
       color: var(--color-cream);
     }
@@ -281,51 +347,22 @@
       color: var(--color-muted);
       margin-top: 0.15rem;
     }
-
-    /* precio de combos — mismo comentario que .card-price arriba */
+    /* PRECIO combo — hardcodeado, ver comentario .card-price */
     .combo-price {
       font-family: var(--font-display);
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       color: var(--color-gold);
       white-space: nowrap;
     }
 
     /* ============================================================
-       SANDWICHES XL
+       SANDWICHES XL — también usan .menu-card con imagen
     ============================================================ */
-    .sandwich-card {
-      background: var(--color-bg-card);
-      border: 1px solid var(--color-divider);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.4rem;
-      transition: border-color var(--transition), transform var(--transition);
-    }
-    .sandwich-card:hover {
-      border-color: var(--color-red-glow);
-      transform: translateY(-2px);
-    }
-    .sandwich-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.6rem;
-    }
-    .sandwich-name {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      letter-spacing: 0.08em;
-      color: var(--color-gold);
-    }
-    /* precio de sandwich — hardcodeado, ver comentario .card-price */
-    .sandwich-price {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      color: var(--color-gold);
-    }
     .sandwich-ingredients {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--color-muted);
       line-height: 1.6;
+      margin-top: 0.1rem;
     }
 
     /* ============================================================
@@ -333,7 +370,7 @@
     ============================================================ */
     .extras-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 0.8rem;
       margin-top: 0.4rem;
     }
@@ -342,7 +379,7 @@
       background: var(--color-bg-card);
       border: 1px solid var(--color-divider);
       border-radius: var(--radius);
-      padding: 0.8rem 1rem;
+      padding: 0.85rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -351,11 +388,11 @@
     .extra-pill:hover { border-color: var(--color-red-glow); }
 
     .extra-name { font-size: 0.9rem; color: var(--color-cream); }
-    /* precio de extras — hardcodeado, ver comentario .card-price */
+    /* PRECIO extra — hardcodeado, ver comentario .card-price */
     .extra-price { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-gold); }
 
     /* ============================================================
-       ENVÍOS BANNER
+       ENVÍOS
     ============================================================ */
     .envios-banner {
       margin-top: 2.4rem;
@@ -370,10 +407,12 @@
     }
     .envios-icon { font-size: 2rem; }
     .envios-text { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.1em; color: var(--color-gold); }
-    /* precio mínimo de envío — hardcodeado, ver comentario .card-price */
+    /* PRECIO MÍNIMO ENVÍO — cambiá si varía */
     .envios-sub { font-size: 0.85rem; color: var(--color-cream); margin-top: 0.1rem; }
 
-    /* ============================================================  FOOTER  ============================================================ */
+    /* ============================================================
+       FOOTER
+    ============================================================ */
     footer {
       text-align: center;
       padding: 1.6rem 1rem;
@@ -383,9 +422,6 @@
       margin-top: 1rem;
     }
 
-    /* ============================================================
-       SCROLLBAR personalizada (solo navegadores Chromium)
-    ============================================================ */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--color-bg); }
     ::-webkit-scrollbar-thumb { background: var(--color-red); border-radius: 3px; }
@@ -393,26 +429,19 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       HERO
-  ============================================================ -->
+  <!-- HERO -->
   <header class="hero">
     <!--
-      TODO (futuro): Logo real del emprendimiento.
-      1. Guardá tu logo como "logo.png" en la misma carpeta que index.html
-      2. Descomentá la siguiente línea:
-      <img class="hero-logo" src="logo.png" alt="Crazy's Chicken logo" />
+      TODO: Logo real.
+      Guardá el archivo como "logo.png" junto a index.html y descomentá:
+      <img src="logo.png" alt="Crazy's Chicken logo" style="width:90px;margin:0 auto 1rem;" />
     -->
-
     <p class="hero-eyebrow">Crazy's</p>
     <h1 class="hero-title">CHICKEN</h1>
     <p class="hero-subtitle">MENÚ</p>
     <span class="hero-badge">🍗 Pedidos &amp; Envíos disponibles</span>
   </header>
 
-  <!-- ============================================================
-       CONTENIDO PRINCIPAL
-  ============================================================ -->
   <main class="container">
 
     <!-- ── PLATOS PRINCIPALES ── -->
@@ -420,51 +449,96 @@
 
     <div class="menu-grid">
 
-      <!-- POLLO FRITO -->
+      <!-- ══════════════════════════════════════════════════
+           CARD: POLLO FRITO
+           IMAGEN → cambiá src="img/pollo-frito.jpg" por tu foto.
+           Guardá la imagen en la carpeta img/ del repo.
+      ══════════════════════════════════════════════════ -->
       <div class="menu-card">
-        <div class="card-header">
-          <span class="card-name">POLLO FRITO</span>
-          <!-- PRECIO: Pollo Frito — cambiá el número si el precio varía -->
-          <span class="card-price">$12.000</span>
+        <div class="card-img-wrap">
+          <img
+            src="img/pollo-frito.jpg"
+            alt="Pollo Frito con papas crocantes"
+            class="card-img"
+            loading="lazy"
+          />
         </div>
-        <p class="card-desc">
-          Crujiente por fuera, jugoso por dentro.
-          Acompañado por papas crocantes y salsa a elección.
-        </p>
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">POLLO FRITO</span>
+            <!-- PRECIO: Pollo Frito ↓ -->
+            <span class="card-price">$12.000</span>
+          </div>
+          <!--
+            DESCRIPCIÓN: Pollo Frito
+            Editá el texto de abajo para cambiar la descripción.
+          -->
+          <p class="card-desc">
+            Crujiente por fuera, jugoso por dentro.
+            Acompañado por papas crocantes y salsa a elección.
+          </p>
+        </div>
       </div>
 
-      <!-- POLLO TERIYAKI -->
+      <!-- ══════════════════════════════════════════════════
+           CARD: POLLO TERIYAKI
+           IMAGEN → cambiá src="img/pollo-teriyaki.jpg" por tu foto.
+      ══════════════════════════════════════════════════ -->
       <div class="menu-card">
-        <div class="card-header">
-          <span class="card-name">POLLO TERIYAKI</span>
-          <!-- PRECIO: Pollo Teriyaki — cambiá el número si el precio varía -->
-          <span class="card-price">$12.000</span>
+        <div class="card-img-wrap">
+          <img
+            src="img/pollo-teriyaki.jpg"
+            alt="Pollo Teriyaki con arroz"
+            class="card-img"
+            loading="lazy"
+          />
         </div>
-        <p class="card-desc">
-          Trozos de pollo glaseado en salsa de soja y especias varias,
-          servidos con arroz.
-        </p>
-        <!-- Badge "Más Grande" — eliminalo si ya no aplica -->
-        <span class="badge-grande">↑ MÁS GRANDE</span>
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">POLLO TERIYAKI</span>
+            <!-- PRECIO: Pollo Teriyaki ↓ -->
+            <span class="card-price">$12.000</span>
+          </div>
+          <!--
+            DESCRIPCIÓN: Pollo Teriyaki
+          -->
+          <p class="card-desc">
+            Trozos de pollo glaseado en salsa de soja y especias varias,
+            servidos con arroz.
+          </p>
+          <!-- Badge "Más Grande" — eliminalo si ya no aplica -->
+          <span class="badge-grande">↑ MÁS GRANDE</span>
+        </div>
       </div>
 
-      <!-- PAPAS CRAZY -->
+      <!-- ══════════════════════════════════════════════════
+           CARD: PAPAS CRAZY
+           IMAGEN → cambiá src="img/papas-crazy.jpg" por tu foto.
+      ══════════════════════════════════════════════════ -->
       <div class="menu-card">
-        <div class="card-header">
-          <span class="card-name">PAPAS CRAZY</span>
-          <!-- PRECIO: Papas Crazy — cambiá el número si el precio varía -->
-          <span class="card-price">$9.500</span>
+        <div class="card-img-wrap">
+          <img
+            src="img/papas-crazy.jpg"
+            alt="Papas Crazy con cheddar y panceta"
+            class="card-img"
+            loading="lazy"
+          />
         </div>
-        <p class="card-desc">
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">PAPAS CRAZY</span>
+            <!-- PRECIO: Papas Crazy ↓ -->
+            <span class="card-price">$9.500</span>
+          </div>
           <!--
             INGREDIENTES: Papas Crazy
-            Para agregar o quitar ingredientes, editá este párrafo.
+            Editá la lista para agregar / quitar ingredientes.
           -->
-          Cheddar y panceta ahumada.
-        </p>
+          <p class="card-desc">Cheddar y panceta ahumada.</p>
+        </div>
       </div>
 
-    </div><!-- /menu-grid -->
+    </div><!-- /menu-grid platos -->
 
     <!-- ── COMBOS ── -->
     <h2 class="section-title">Combos</h2>
@@ -475,13 +549,10 @@
       <div class="combo-item">
         <div>
           <p class="combo-name">COMBO CRAZY</p>
-          <!--
-            CONTENIDO: Combo Crazy
-            Para modificar qué incluye el combo, editá este párrafo.
-          -->
+          <!-- CONTENIDO: Combo Crazy — editá si cambia lo que incluye -->
           <p class="combo-desc">Pollo frito + Pollo teriyaki.</p>
         </div>
-        <!-- PRECIO: Combo Crazy — cambiá el número si el precio varía -->
+        <!-- PRECIO: Combo Crazy ↓ -->
         <span class="combo-price">$22.000</span>
       </div>
 
@@ -489,13 +560,10 @@
       <div class="combo-item">
         <div>
           <p class="combo-name">COMBO PRIMO</p>
-          <!--
-            CONTENIDO: Combo Primo
-            Para modificar qué incluye el combo, editá este párrafo.
-          -->
+          <!-- CONTENIDO: Combo Primo -->
           <p class="combo-desc">Pollo frito XL + Papas Crazy.</p>
         </div>
-        <!-- PRECIO: Combo Primo — cambiá el número si el precio varía -->
+        <!-- PRECIO: Combo Primo ↓ -->
         <span class="combo-price">$22.000</span>
       </div>
 
@@ -503,13 +571,10 @@
       <div class="combo-item">
         <div>
           <p class="combo-name">COMBO CUMPA</p>
-          <!--
-            CONTENIDO: Combo Cumpa
-            Para modificar qué incluye el combo, editá este párrafo.
-          -->
+          <!-- CONTENIDO: Combo Cumpa -->
           <p class="combo-desc">2 Sandwiches de Pollo + Papas fritas.</p>
         </div>
-        <!-- PRECIO: Combo Cumpa — cambiá el número si el precio varía -->
+        <!-- PRECIO: Combo Cumpa ↓ -->
         <span class="combo-price">$20.000</span>
       </div>
 
@@ -519,118 +584,126 @@
     <h2 class="section-title">Sandwiches XL</h2>
 
     <!--
-      PRECIO GENERAL: Sandwiches XL
-      Todos los XL tienen el mismo precio. Si se diferencian en el futuro,
-      mové el precio a dentro de cada .sandwich-header individual.
+      PRECIO GENERAL Sandwiches XL ↓
+      Si en el futuro cada sandwich tiene precio distinto,
+      mové la etiqueta .card-price a dentro del .card-header de cada uno.
     -->
-    <p style="text-align:center; font-family: var(--font-display); font-size:1.8rem; color:var(--color-gold); margin-bottom:1rem;">
+    <p style="text-align:center; font-family:var(--font-display); font-size:1.8rem; color:var(--color-gold); margin-bottom:1.2rem;">
       $14.000
     </p>
 
-    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+    <div class="menu-grid">
 
-      <!-- SANDWICH DE LA TÍA -->
-      <div class="sandwich-card">
-        <div class="sandwich-header">
-          <span class="sandwich-name">DE LA TÍA</span>
+      <!-- ══════════════════════════════════════════════════
+           CARD: SANDWICH DE LA TÍA
+           IMAGEN → cambiá src="img/sandwich-tia.jpg" por tu foto.
+      ══════════════════════════════════════════════════ -->
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img
+            src="img/sandwich-tia.j"
+            alt="Sandwich De la Tía"
+            class="card-img"
+            loading="lazy"
+          />
         </div>
-        <p class="sandwich-ingredients">
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">DE LA TÍA</span>
+          </div>
           <!--
             INGREDIENTES: Sandwich "De la Tía"
-            Editá la lista de abajo para agregar / quitar / cambiar ingredientes.
-            Separalos con " · " para mantener el estilo.
+            Separalos con  ·  para mantener el estilo visual.
           -->
-          Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
-          Chutney de morrones &nbsp;·&nbsp; Muzzarella &nbsp;·&nbsp;
-          Panceta ahumada &nbsp;·&nbsp; Papas.
-        </p>
+          <p class="card-desc sandwich-ingredients">
+            Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
+            Chutney de morrones &nbsp;·&nbsp; Muzzarella &nbsp;·&nbsp;
+            Panceta ahumada &nbsp;·&nbsp; Papas.
+          </p>
+        </div>
       </div>
 
-      <!-- SANDWICH DEL TÍO -->
-      <div class="sandwich-card">
-        <div class="sandwich-header">
-          <span class="sandwich-name">DEL TÍO</span>
+      <!-- ══════════════════════════════════════════════════
+           CARD: SANDWICH DEL TÍO
+           IMAGEN → cambiá src="img/sandwich-tio.jpg" por tu foto.
+      ══════════════════════════════════════════════════ -->
+      <div class="menu-card">
+        <div class="card-img-wrap">
+          <img
+            src="img/sandwich-tio.jpeg"
+            alt="Sandwich Del Tío"
+            class="card-img"
+            loading="lazy"
+          />
         </div>
-        <p class="sandwich-ingredients">
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">DEL TÍO</span>
+          </div>
           <!--
             INGREDIENTES: Sandwich "Del Tío"
-            Editá la lista de abajo para agregar / quitar / cambiar ingredientes.
           -->
-          Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
-          Chutney de morrones &nbsp;·&nbsp; Cheddar picante &nbsp;·&nbsp;
-          Panceta ahumada &nbsp;·&nbsp; Papas.
-        </p>
+          <p class="card-desc sandwich-ingredients">
+            Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
+            Chutney de morrones &nbsp;·&nbsp; Cheddar picante &nbsp;·&nbsp;
+            Panceta ahumada &nbsp;·&nbsp; Papas.
+          </p>
+        </div>
       </div>
 
-    </div>
+    </div><!-- /menu-grid sandwiches -->
 
     <!-- ── EXTRA SABOR ── -->
     <h2 class="section-title">Extra Sabor</h2>
-    <p style="text-align:center; font-size:0.85rem; color:var(--color-muted); margin-bottom:1rem; margin-top:-0.8rem;">
+    <p style="text-align:center; font-size:0.85rem; color:var(--color-muted); margin-top:-0.8rem; margin-bottom:1rem;">
       Añadí a tu sandwich
     </p>
 
     <div class="extras-grid">
 
-      <!-- EXTRA: Cheddar picante / regular -->
       <div class="extra-pill">
-        <!--
-          EXTRA: Cheddar
-          Cambiá el texto si cambia el nombre o si se divide en dos precios distintos.
-        -->
+        <!-- EXTRA: Cheddar — cambiá nombre si se separa en dos opciones -->
         <span class="extra-name">Cheddar picante / reg.</span>
-        <!-- PRECIO: Extra Cheddar — cambiá el número si el precio varía -->
+        <!-- PRECIO: Extra Cheddar ↓ -->
         <span class="extra-price">$1.000</span>
       </div>
 
-      <!-- EXTRA: Muzzarella -->
       <div class="extra-pill">
-        <!--
-          EXTRA: Muzzarella
-          Cambiá el texto si cambia el nombre del extra.
-        -->
+        <!-- EXTRA: Muzzarella -->
         <span class="extra-name">Muzzarella</span>
-        <!-- PRECIO: Extra Muzzarella — cambiá el número si el precio varía -->
+        <!-- PRECIO: Extra Muzzarella ↓ -->
         <span class="extra-price">$1.000</span>
       </div>
 
       <!--
-        TODO (futuro): Para agregar más extras, duplicá el bloque .extra-pill
-        de arriba y actualizá nombre y precio.
+        TODO: Para agregar más extras, copiá el bloque .extra-pill
+        de arriba, pegalo acá abajo y cambiá nombre y precio.
       -->
 
     </div>
 
     <!-- ── ENVÍOS ── -->
-    <!--
-      TODO (futuro): si el monto mínimo de envío cambia,
-      actualizá el texto dentro de .envios-sub y el span "desde $1.000".
-    -->
     <div class="envios-banner">
       <span class="envios-icon">🛵</span>
       <div>
         <p class="envios-text">ENVÍOS DISPONIBLES</p>
-        <!-- PRECIO MÍNIMO DE ENVÍO — cambiá si varía -->
+        <!-- PRECIO MÍNIMO DE ENVÍO ↓ -->
         <p class="envios-sub">Desde <strong>$1.000</strong> · Consultá tu zona</p>
       </div>
     </div>
 
-  </main><!-- /container -->
+  </main>
 
   <!-- ============================================================
        FOOTER
-       TODO (futuro): agregá redes sociales, número de WhatsApp
-       o dirección cuando estén disponibles.
+       TODO: Agregá WhatsApp, Instagram u otras redes.
+       Reemplazá XXXXXXXXXX con tu número (sin espacios ni +54).
+       <a href="https://wa.me/54XXXXXXXXXX" style="color:var(--color-gold)">
+         📲 Hacer pedido por WhatsApp
+       </a>
   ============================================================ -->
   <footer>
     <p>© 2026 Crazy's Chicken &nbsp;·&nbsp; Todos los derechos reservados</p>
-    <!--
-      TODO (futuro): Botón de WhatsApp para hacer pedidos.
-      Reemplazá XXXXXXXXXX con tu número sin espacios ni guiones.
-      <a href="https://wa.me/54XXXXXXXXXX" style="color:var(--color-gold)">
-        📲 Hacer pedido por WhatsApp
-      </a>
-    -->
   </footer>
 
 </body>
