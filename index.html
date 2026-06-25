@@ -5,67 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crazy's Chicken — Menú</title>
 
-  <!-- ============================================================
-       FUENTES (Google Fonts — sin costo, carga estática)
-       Para cambiar la tipografía, reemplazá los nombres aquí
-       y en la sección CSS :root → --font-display / --font-body
-  ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
   <style>
     /* ============================================================
-       TOKENS GLOBALES — editá estos valores para cambiar colores,
-       fuentes o tamaños en todo el sitio desde un solo lugar
+       DESIGN TOKENS
+       Sistema inspirado en Starbucks Design System (DESIGN.md)
+       adaptado a la paleta de Crazy's Chicken.
     ============================================================ */
     :root {
-      --color-bg:       #0d0705;
-      --color-bg-card:  #1a0c09;
-      --color-red:      #8b1a1a;
-      --color-red-glow: #c0392b;
-      --color-gold:     #f0c060;
-      --color-cream:    #f5f0e8;
-      --color-muted:    #a89080;
-      --color-divider:  #3a1a10;
+      /* ── Color palette ────────────────────────────────────────
+         Brand:    #8b1a1a  (rol → Starbucks Green)
+         Accent:   #c0392b  (rol → Green Accent)
+         Deep:     #0d0705  (rol → House Green / fondo)
+         Gold:     #f0c060  (rol → Starbucks Gold, solo precios)
+         Cream:    #f5f0e8  (rol → Text Black sobre fondo oscuro)
+         Muted:    #a89080  (rol → Text Black Soft)
+         Divider:  #3a1a10
+      ──────────────────────────────────────────────────────────── */
+      --color-bg:          #0d0705;
+      --color-surface:     #1a0c09;
+      --color-brand:       #8b1a1a;
+      --color-brand-hover: #c0392b;
+      --color-gold:        #f0c060;
+      --color-cream:       #f5f0e8;
+      --color-muted:       #a89080;
+      --color-divider:     #3a1a10;
+      --color-band:        #1f0808;
 
+      /* ── Typography ───────────────────────────────────────────
+         Display: Bebas Neue (condensada, bold)
+         Body:    Inter (sans-serif, sustituye a SoDoSans)
+         Tracking: -0.01em como Starbucks (DESIGN.md §3)
+      ─────────────────────────────────────────────────────────── */
       --font-display: 'Bebas Neue', sans-serif;
       --font-body:    'Inter', sans-serif;
+      --tracking-tight: -0.01em;
 
-      --radius: 10px;
-      --transition: 0.25s ease;
+      /* ── Spacing scale (1rem = 16px) ─────────────────────────
+         Basado en DESIGN.md §5 — rem semantic scale
+      ─────────────────────────────────────────────────────────── */
+      --space-xs:  0.25rem;   /*  4px — DESIGN.md space-1 */
+      --space-sm:  0.5rem;    /*  8px — DESIGN.md space-2 */
+      --space-md:  1rem;      /* 16px — DESIGN.md space-3 */
+      --space-lg:  1.5rem;    /* 24px — DESIGN.md space-4 */
+      --space-xl:  2rem;      /* 32px — DESIGN.md space-5 */
+      --space-2xl: 2.5rem;    /* 40px — DESIGN.md space-6 */
+      --space-3xl: 3rem;      /* 48px — DESIGN.md space-7 */
+      --space-4xl: 3.5rem;    /* 56px — DESIGN.md space-8 */
 
-      /* ── IMAGEN DE CARD ──────────────────────────────────────
-         Altura de la foto en cada card.
-         Cambiá este valor si querés fotos más altas o más bajas.
-      ───────────────────────────────────────────────────────── */
+      /* ── Border Radius ────────────────────────────────────────
+         Cards:  12px  (DESIGN.md §5 — cardBorderRadius)
+         Pills:  50px  (DESIGN.md §5 — buttonBorderRadius, universal)
+         Circle: 50%   (DESIGN.md §5 — Frap button)
+      ─────────────────────────────────────────────────────────── */
+      --radius-card:   12px;
+      --radius-pill:   50px;
+      --radius-circle: 50%;
+
+      /* ── Shadows (layered, whisper-soft — DESIGN.md §6) ──────
+         Card:    2 capas low-alpha (0.14 + 0.24)
+         Card hover: 2 capas + mayor offset Y
+         Float:   base + ambient (Frap-style)
+      ─────────────────────────────────────────────────────────── */
+      --shadow-card:       0 0 0.5px rgba(0,0,0,0.14), 0 1px 1px rgba(0,0,0,0.24);
+      --shadow-card-hover: 0 0 0.5px rgba(0,0,0,0.14), 0 4px 8px rgba(0,0,0,0.30);
+      --shadow-float:      0 0 6px rgba(0,0,0,0.24), 0 8px 12px rgba(0,0,0,0.14);
+
+      /* ── Motion ───────────────────────────────────────────────
+         Transition: 0.2s ease (DESIGN.md — all 0.2s ease)
+      ─────────────────────────────────────────────────────────── */
+      --transition: 0.2s ease;
+
+      /* ── Card image ─────────────────────────────────────────── */
       --card-img-height: 180px;
     }
 
+    /* ============================================================
+       BASE
+    ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--color-bg);
       color: var(--color-cream);
       font-family: var(--font-body);
+      font-weight: 400;
       line-height: 1.6;
+      letter-spacing: var(--tracking-tight);
       min-height: 100vh;
     }
 
     img { display: block; max-width: 100%; }
 
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg) var(--space-3xl);
+    }
+
     /* ============================================================
        HERO
+       Versión refinada: "brasas" sutiles, tipografía limpia.
     ============================================================ */
     .hero {
       position: relative;
       overflow: hidden;
       text-align: center;
-      padding: 3.5rem 1rem 2.5rem;
-      background: radial-gradient(ellipse at 50% 120%, #5c0f0f 0%, #0d0705 65%);
+      padding: var(--space-4xl) var(--space-md) var(--space-2xl);
+      background: radial-gradient(ellipse at 50% 120%, #5c0f0f 0%, var(--color-bg) 65%);
     }
 
     .hero::before {
@@ -73,16 +126,16 @@
       position: absolute;
       inset: -60% -20%;
       background: radial-gradient(ellipse at 50% 100%,
-        rgba(180, 40, 10, 0.35) 0%,
-        rgba(120, 10, 0, 0.12) 45%,
+        rgba(180, 40, 10, 0.30) 0%,
+        rgba(120, 10, 0, 0.10) 45%,
         transparent 70%);
       animation: brasasPulse 4s ease-in-out infinite alternate;
       pointer-events: none;
     }
 
     @keyframes brasasPulse {
-      0%   { transform: scaleY(1)   translateY(0);   opacity: 0.7; }
-      100% { transform: scaleY(1.1) translateY(-3%); opacity: 1;   }
+      0%   { transform: scaleY(1);    opacity: 0.6; }
+      100% { transform: scaleY(1.08); opacity: 1;   }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -91,7 +144,7 @@
 
     .hero-eyebrow {
       font-family: var(--font-display);
-      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
       letter-spacing: 0.35em;
       color: var(--color-muted);
       text-transform: uppercase;
@@ -106,54 +159,50 @@
       letter-spacing: 0.04em;
       position: relative;
       text-shadow:
-        0 0 40px rgba(220, 80, 10, 0.7),
-        0 0 80px rgba(180, 40, 10, 0.4),
+        0 0 40px rgba(220, 80, 10, 0.6),
+        0 0 80px rgba(180, 40, 10, 0.3),
         0 4px 0 #4a0a00;
     }
 
     .hero-subtitle {
       font-family: var(--font-display);
-      font-size: clamp(1.2rem, 4vw, 2rem);
-      letter-spacing: 0.2em;
+      font-size: clamp(1rem, 3.5vw, 1.6rem);
+      letter-spacing: 0.25em;
       color: var(--color-cream);
-      margin-top: 0.4rem;
+      margin-top: var(--space-xs);
       position: relative;
     }
 
     .hero-badge {
       display: inline-block;
-      margin-top: 1.4rem;
-      background: var(--color-red);
+      margin-top: var(--space-lg);
+      background: var(--color-brand);
       color: var(--color-gold);
       font-family: var(--font-display);
-      font-size: 1rem;
+      font-size: 0.9rem;
       letter-spacing: 0.15em;
-      padding: 0.4rem 1.4rem;
-      border-radius: 2px;
-      border: 1px solid var(--color-red-glow);
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-pill);
       position: relative;
     }
 
     /* ============================================================
-       LAYOUT
+       SECTION TITLES
+       Color brand (rol Starbucks Green) + peso visual.
+       DESIGN.md §3: jerarquía por color + peso, no solo tamaño.
     ============================================================ */
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 1.2rem 3rem;
-    }
-
     .section-title {
       font-family: var(--font-display);
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
       letter-spacing: 0.12em;
-      color: var(--color-gold);
+      color: var(--color-brand);
       text-align: center;
-      margin: 2.8rem 0 1.4rem;
+      margin: var(--space-3xl) 0 var(--space-lg);
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: var(--space-md);
     }
+
     .section-title::before,
     .section-title::after {
       content: '';
@@ -162,77 +211,67 @@
       background: var(--color-divider);
     }
 
+    .section-sub {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      margin-top: calc(-1 * var(--space-md));
+      margin-bottom: var(--space-md);
+    }
+
+    .section-price-badge {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
+      color: var(--color-gold);
+      margin-bottom: var(--space-lg);
+    }
+
     /* ============================================================
-       CARD GENÉRICA CON IMAGEN
-       ────────────────────────────────────────────────────────────
-       ESTRUCTURA HTML de cada card:
-
-         <div class="menu-card">
-           <div class="card-img-wrap">
-             <img
-               src="img/NOMBRE-DE-TU-FOTO.jpg"
-               alt="Descripción del plato"
-               class="card-img"
-               loading="lazy"
-             />
-           </div>
-           <div class="card-body">
-             <div class="card-header">
-               <span class="card-name">NOMBRE DEL PLATO</span>
-               <span class="card-price">$XX.XXX</span>
-             </div>
-             <p class="card-desc">Descripción del plato.</p>
-           </div>
-         </div>
-
-       PARA AGREGAR TU FOTO:
-         1. Guardá la imagen en la carpeta  img/  (creala si no existe).
-            Nombre sugerido sin espacios ni tildes, ej: pollo-frito.jpg
-         2. Cambiá el atributo src="img/TU-FOTO.jpg" en la card correspondiente.
-         3. Actualizá el atributo alt con una descripción breve (accesibilidad).
-
-       PLACEHOLDER (mientras no tenés foto):
-         Si el src apunta a un archivo inexistente, se muestra el gradiente
-         oscuro de fondo automáticamente — no rompe el diseño.
+       MENU GRID — CARDS
+       Cards 12px radius + sombras en capas (DESIGN.md §4, §6).
     ============================================================ */
     .menu-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.2rem;
+      gap: var(--space-lg);
     }
 
     @media (min-width: 600px) {
       .menu-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* Card contenedor */
     .menu-card {
-      background: var(--color-bg-card);
+      background: var(--color-surface);
       border: 1px solid var(--color-divider);
-      border-radius: var(--radius);
-      overflow: hidden;                         /* recorta la imagen a los bordes redondeados */
+      border-radius: var(--radius-card);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+      transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        transform var(--transition);
+      box-shadow: var(--shadow-card);
     }
 
     .menu-card:hover {
-      border-color: var(--color-red-glow);
-      box-shadow: 0 0 22px rgba(192, 57, 43, 0.2);
-      transform: translateY(-3px);
+      border-color: var(--color-brand-hover);
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-2px);
     }
 
-    /* Zona de imagen — altura fija, la foto se recorta centrada */
+    /* Image zone */
     .card-img-wrap {
       width: 100%;
-      height: var(--card-img-height);           /* ← cambiá --card-img-height en :root para ajustar */
+      height: var(--card-img-height);
       overflow: hidden;
-      background: linear-gradient(135deg, #2a0a05 0%, #1a0c09 100%); /* placeholder visible sin foto */
+      background: linear-gradient(135deg, #2a0a05 0%, #1a0c09 100%);
       position: relative;
       flex-shrink: 0;
     }
 
-    /* Icono de placeholder cuando no hay imagen */
     .card-img-wrap::after {
       content: '🍗';
       position: absolute;
@@ -248,23 +287,22 @@
     .card-img {
       width: 100%;
       height: 100%;
-      object-fit: cover;                        /* recorta y centra la foto sin deformarla */
-      object-position: center;                  /* cambiá a "top" o "bottom" si la foto lo necesita */
+      object-fit: cover;
+      object-position: center;
       display: block;
       transition: transform 0.4s ease;
     }
 
-    /* Zoom suave al hacer hover sobre la foto */
     .menu-card:hover .card-img {
       transform: scale(1.04);
     }
 
-    /* Zona de texto bajo la imagen */
+    /* Card body */
     .card-body {
-      padding: 1rem 1.2rem 1.2rem;
+      padding: var(--space-lg) var(--space-lg) var(--space-xl);
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: var(--space-xs);
       flex: 1;
     }
 
@@ -272,25 +310,20 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 0.5rem;
+      gap: var(--space-sm);
     }
 
     .card-name {
       font-family: var(--font-display);
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       letter-spacing: 0.08em;
       color: var(--color-cream);
       line-height: 1.1;
     }
 
-    /* ── PRECIO ─────────────────────────────────────────────────
-       Hardcodeado en el HTML. Para actualizar, buscá la línea:
-         <span class="card-price">$XX.XXX</span>
-       dentro de la card correspondiente y cambiá el número.
-    ───────────────────────────────────────────────────────────── */
     .card-price {
       font-family: var(--font-display);
-      font-size: 1.45rem;
+      font-size: 1.4rem;
       color: var(--color-gold);
       white-space: nowrap;
       letter-spacing: 0.04em;
@@ -302,134 +335,206 @@
       line-height: 1.55;
     }
 
-    .badge-grande {
+    /* Badge "↑ MÁS GRANDE" — diseño pill */
+    .badge-pill {
       display: inline-block;
-      background: var(--color-red);
+      background: var(--color-brand);
       color: var(--color-gold);
       font-family: var(--font-display);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       letter-spacing: 0.1em;
-      padding: 0.15rem 0.55rem;
-      border-radius: 2px;
+      padding: 0.2rem 0.7rem;
+      border-radius: var(--radius-pill);
       align-self: flex-start;
-      margin-top: 0.2rem;
+      margin-top: var(--space-xs);
     }
 
     /* ============================================================
-       COMBOS
+       FEATURE BAND — COMBOS
+       Sección destacada tipo "House Green band" (DESIGN.md §4).
+       Fondo oscuro + borde brand + contenido dorado/crema.
     ============================================================ */
-    .combos-section {
-      background: linear-gradient(135deg, #1f0808 0%, #150404 100%);
-      border: 1px solid var(--color-red);
-      border-radius: var(--radius);
-      padding: 1.4rem;
-      margin-top: 2rem;
+    .feature-band {
+      background: var(--color-band);
+      border: 1px solid var(--color-brand);
+      border-radius: var(--radius-card);
+      padding: var(--space-xl);
+      margin-top: var(--space-2xl);
     }
 
-    .combo-item {
+    .feature-item {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 0.85rem 0;
+      padding: var(--space-md) 0;
       border-bottom: 1px solid var(--color-divider);
-      gap: 1rem;
+      gap: var(--space-md);
     }
-    .combo-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .feature-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
-    .combo-name {
+    .feature-item-name {
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       letter-spacing: 0.1em;
       color: var(--color-cream);
     }
-    .combo-desc {
+
+    .feature-item-desc {
       font-size: 0.82rem;
       color: var(--color-muted);
       margin-top: 0.15rem;
     }
-    /* PRECIO combo — hardcodeado, ver comentario .card-price */
-    .combo-price {
+
+    .feature-item-price {
       font-family: var(--font-display);
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       color: var(--color-gold);
       white-space: nowrap;
     }
 
     /* ============================================================
-       SANDWICHES XL — también usan .menu-card con imagen
+       SANDWICHES XL
+       Ingredients list — texto secundario.
     ============================================================ */
     .sandwich-ingredients {
       font-size: 0.82rem;
       color: var(--color-muted);
-      line-height: 1.6;
+      line-height: 1.65;
       margin-top: 0.1rem;
     }
 
     /* ============================================================
-       EXTRAS
+       EXTRAS — PILLS
+       Radio 50px (full-pill) como botones Starbucks (DESIGN.md §4).
     ============================================================ */
     .extras-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 0.8rem;
-      margin-top: 0.4rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-sm);
     }
 
     .extra-pill {
-      background: var(--color-bg-card);
+      background: var(--color-surface);
       border: 1px solid var(--color-divider);
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
+      border-radius: var(--radius-pill);
+      padding: var(--space-md) var(--space-lg);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: border-color var(--transition);
+      transition: border-color var(--transition), box-shadow var(--transition);
     }
-    .extra-pill:hover { border-color: var(--color-red-glow); }
+    .extra-pill:hover {
+      border-color: var(--color-brand-hover);
+      box-shadow: 0 0 0 1px var(--color-brand-hover);
+    }
 
-    .extra-name { font-size: 0.9rem; color: var(--color-cream); }
-    /* PRECIO extra — hardcodeado, ver comentario .card-price */
-    .extra-price { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-gold); }
+    .extra-name {
+      font-size: 0.9rem;
+      color: var(--color-cream);
+    }
+
+    .extra-price {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--color-gold);
+    }
 
     /* ============================================================
-       ENVÍOS
+       ENVÍOS — BAND
+       Feature band solid brand (fondo #8b1a1a).
     ============================================================ */
-    .envios-banner {
-      margin-top: 2.4rem;
-      background: var(--color-red);
-      border-radius: var(--radius);
-      padding: 1rem 1.6rem;
+    .envios-band {
+      margin-top: var(--space-3xl);
+      background: var(--color-brand);
+      border-radius: var(--radius-card);
+      padding: var(--space-lg) var(--space-xl);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: var(--space-md);
       text-align: center;
     }
+
     .envios-icon { font-size: 2rem; }
-    .envios-text { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.1em; color: var(--color-gold); }
-    /* PRECIO MÍNIMO ENVÍO — cambiá si varía */
-    .envios-sub { font-size: 0.85rem; color: var(--color-cream); margin-top: 0.1rem; }
+
+    .envios-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      color: var(--color-gold);
+    }
+
+    .envios-sub {
+      font-size: 0.85rem;
+      color: var(--color-cream);
+      margin-top: 0.1rem;
+    }
+
+    /* ============================================================
+       FLOATING WHATSAPP CTA
+       Inspirado en el Frap button de Starbucks (DESIGN.md §4).
+       - 56px circular
+       - Fixed bottom-right
+       - Sombras en capa base + ambient
+       - Active: scale(0.95) + ambient fade
+    ============================================================ */
+    .whatsapp-float {
+      position: fixed;
+      bottom: var(--space-xl);
+      right: var(--space-xl);
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-circle);
+      background: #25D366;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      text-decoration: none;
+      box-shadow: var(--shadow-float);
+      transition: transform var(--transition), box-shadow var(--transition);
+      z-index: 100;
+      color: white;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.05);
+    }
+
+    .whatsapp-float:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 6px rgba(0,0,0,0.24), 0 8px 12px rgba(0,0,0,0);
+    }
 
     /* ============================================================
        FOOTER
     ============================================================ */
     footer {
       text-align: center;
-      padding: 1.6rem 1rem;
+      padding: var(--space-lg) var(--space-md);
       font-size: 0.78rem;
       color: var(--color-muted);
       border-top: 1px solid var(--color-divider);
-      margin-top: 1rem;
+      margin-top: var(--space-md);
     }
 
+    /* ── Scrollbar (detalle) ───────────────────────────────────── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--color-bg); }
-    ::-webkit-scrollbar-thumb { background: var(--color-red); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--color-brand); border-radius: 3px; }
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════════════ -->
   <header class="hero">
     <!--
       TODO: Logo real.
@@ -449,11 +554,10 @@
 
     <div class="menu-grid">
 
-      <!-- ══════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════
            CARD: POLLO FRITO
            IMAGEN → cambiá src="img/pollo-frito.jpg" por tu foto.
-           Guardá la imagen en la carpeta img/ del repo.
-      ══════════════════════════════════════════════════ -->
+      ═══════════════════════════════════════════════════════ -->
       <div class="menu-card">
         <div class="card-img-wrap">
           <img
@@ -469,10 +573,7 @@
             <!-- PRECIO: Pollo Frito ↓ -->
             <span class="card-price">$12.000</span>
           </div>
-          <!--
-            DESCRIPCIÓN: Pollo Frito
-            Editá el texto de abajo para cambiar la descripción.
-          -->
+          <!-- DESCRIPCIÓN: Pollo Frito -->
           <p class="card-desc">
             Crujiente por fuera, jugoso por dentro.
             Acompañado por papas crocantes y salsa a elección.
@@ -480,10 +581,9 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════
            CARD: POLLO TERIYAKI
-           IMAGEN → cambiá src="img/pollo-teriyaki.jpg" por tu foto.
-      ══════════════════════════════════════════════════ -->
+      ═══════════════════════════════════════════════════════ -->
       <div class="menu-card">
         <div class="card-img-wrap">
           <img
@@ -499,22 +599,18 @@
             <!-- PRECIO: Pollo Teriyaki ↓ -->
             <span class="card-price">$12.000</span>
           </div>
-          <!--
-            DESCRIPCIÓN: Pollo Teriyaki
-          -->
+          <!-- DESCRIPCIÓN: Pollo Teriyaki -->
           <p class="card-desc">
             Trozos de pollo glaseado en salsa de soja y especias varias,
             servidos con arroz.
           </p>
-          <!-- Badge "Más Grande" — eliminalo si ya no aplica -->
-          <span class="badge-grande">↑ MÁS GRANDE</span>
+          <span class="badge-pill">↑ MÁS GRANDE</span>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════
            CARD: PAPAS CRAZY
-           IMAGEN → cambiá src="img/papas-crazy.jpg" por tu foto.
-      ══════════════════════════════════════════════════ -->
+      ═══════════════════════════════════════════════════════ -->
       <div class="menu-card">
         <div class="card-img-wrap">
           <img
@@ -530,10 +626,7 @@
             <!-- PRECIO: Papas Crazy ↓ -->
             <span class="card-price">$9.500</span>
           </div>
-          <!--
-            INGREDIENTES: Papas Crazy
-            Editá la lista para agregar / quitar ingredientes.
-          -->
+          <!-- INGREDIENTES: Papas Crazy -->
           <p class="card-desc">Cheddar y panceta ahumada.</p>
         </div>
       </div>
@@ -543,61 +636,54 @@
     <!-- ── COMBOS ── -->
     <h2 class="section-title">Combos</h2>
 
-    <div class="combos-section">
+    <div class="feature-band">
 
       <!-- COMBO CRAZY -->
-      <div class="combo-item">
+      <div class="feature-item">
         <div>
-          <p class="combo-name">COMBO CRAZY</p>
-          <!-- CONTENIDO: Combo Crazy — editá si cambia lo que incluye -->
-          <p class="combo-desc">Pollo frito + Pollo teriyaki.</p>
+          <p class="feature-item-name">COMBO CRAZY</p>
+          <!-- CONTENIDO: Combo Crazy -->
+          <p class="feature-item-desc">Pollo frito + Pollo teriyaki.</p>
         </div>
         <!-- PRECIO: Combo Crazy ↓ -->
-        <span class="combo-price">$22.000</span>
+        <span class="feature-item-price">$22.000</span>
       </div>
 
       <!-- COMBO PRIMO -->
-      <div class="combo-item">
+      <div class="feature-item">
         <div>
-          <p class="combo-name">COMBO PRIMO</p>
+          <p class="feature-item-name">COMBO PRIMO</p>
           <!-- CONTENIDO: Combo Primo -->
-          <p class="combo-desc">Pollo frito XL + Papas Crazy.</p>
+          <p class="feature-item-desc">Pollo frito XL + Papas Crazy.</p>
         </div>
         <!-- PRECIO: Combo Primo ↓ -->
-        <span class="combo-price">$22.000</span>
+        <span class="feature-item-price">$22.000</span>
       </div>
 
       <!-- COMBO CUMPA -->
-      <div class="combo-item">
+      <div class="feature-item">
         <div>
-          <p class="combo-name">COMBO CUMPA</p>
+          <p class="feature-item-name">COMBO CUMPA</p>
           <!-- CONTENIDO: Combo Cumpa -->
-          <p class="combo-desc">2 Sandwiches de Pollo + Papas fritas.</p>
+          <p class="feature-item-desc">2 Sandwiches de Pollo + Papas fritas.</p>
         </div>
         <!-- PRECIO: Combo Cumpa ↓ -->
-        <span class="combo-price">$20.000</span>
+        <span class="feature-item-price">$20.000</span>
       </div>
 
-    </div><!-- /combos-section -->
+    </div><!-- /feature-band combos -->
 
     <!-- ── SANDWICHES XL ── -->
     <h2 class="section-title">Sandwiches XL</h2>
 
-    <!--
-      PRECIO GENERAL Sandwiches XL ↓
-      Si en el futuro cada sandwich tiene precio distinto,
-      mové la etiqueta .card-price a dentro del .card-header de cada uno.
-    -->
-    <p style="text-align:center; font-family:var(--font-display); font-size:1.8rem; color:var(--color-gold); margin-bottom:1.2rem;">
-      $14.000
-    </p>
+    <!-- PRECIO GENERAL Sandwiches XL ↓ -->
+    <p class="section-price-badge">$14.000</p>
 
     <div class="menu-grid">
 
-      <!-- ══════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════
            CARD: SANDWICH DE LA TÍA
-           IMAGEN → cambiá src="img/sandwich-tia.jpg" por tu foto.
-      ══════════════════════════════════════════════════ -->
+      ═══════════════════════════════════════════════════════ -->
       <div class="menu-card">
         <div class="card-img-wrap">
           <img
@@ -611,10 +697,7 @@
           <div class="card-header">
             <span class="card-name">DE LA TÍA</span>
           </div>
-          <!--
-            INGREDIENTES: Sandwich "De la Tía"
-            Separalos con  ·  para mantener el estilo visual.
-          -->
+          <!-- INGREDIENTES: Sandwich "De la Tía" -->
           <p class="card-desc sandwich-ingredients">
             Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
             Chutney de morrones &nbsp;·&nbsp; Muzzarella &nbsp;·&nbsp;
@@ -623,10 +706,9 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════
            CARD: SANDWICH DEL TÍO
-           IMAGEN → cambiá src="img/sandwich-tio.jpg" por tu foto.
-      ══════════════════════════════════════════════════ -->
+      ═══════════════════════════════════════════════════════ -->
       <div class="menu-card">
         <div class="card-img-wrap">
           <img
@@ -640,9 +722,7 @@
           <div class="card-header">
             <span class="card-name">DEL TÍO</span>
           </div>
-          <!--
-            INGREDIENTES: Sandwich "Del Tío"
-          -->
+          <!-- INGREDIENTES: Sandwich "Del Tío" -->
           <p class="card-desc sandwich-ingredients">
             Pollo frito glaseado &nbsp;·&nbsp; Pan de papa &nbsp;·&nbsp;
             Chutney de morrones &nbsp;·&nbsp; Cheddar picante &nbsp;·&nbsp;
@@ -655,14 +735,12 @@
 
     <!-- ── EXTRA SABOR ── -->
     <h2 class="section-title">Extra Sabor</h2>
-    <p style="text-align:center; font-size:0.85rem; color:var(--color-muted); margin-top:-0.8rem; margin-bottom:1rem;">
-      Añadí a tu sandwich
-    </p>
+    <p class="section-sub">Añadí a tu sandwich</p>
 
     <div class="extras-grid">
 
       <div class="extra-pill">
-        <!-- EXTRA: Cheddar — cambiá nombre si se separa en dos opciones -->
+        <!-- EXTRA: Cheddar -->
         <span class="extra-name">Cheddar picante / reg.</span>
         <!-- PRECIO: Extra Cheddar ↓ -->
         <span class="extra-price">$1.000</span>
@@ -683,10 +761,10 @@
     </div>
 
     <!-- ── ENVÍOS ── -->
-    <div class="envios-banner">
+    <div class="envios-band">
       <span class="envios-icon">🛵</span>
       <div>
-        <p class="envios-text">ENVÍOS DISPONIBLES</p>
+        <p class="envios-title">ENVÍOS DISPONIBLES</p>
         <!-- PRECIO MÍNIMO DE ENVÍO ↓ -->
         <p class="envios-sub">Desde <strong>$1.000</strong> · Consultá tu zona</p>
       </div>
@@ -694,14 +772,31 @@
 
   </main>
 
-  <!-- ============================================================
+  <!-- ═══════════════════════════════════════════════════════════
+       FLOATING WHATSAPP CTA
+       Botón circular fijo (estilo Frap Starbucks).
+       TODO: Reemplazá XXXXXXXXXX con tu número (sin espacios ni +54).
+  ═══════════════════════════════════════════════════════════ -->
+  <a
+    class="whatsapp-float"
+    href="https://wa.me/54XXXXXXXXXX"
+    target="_blank"
+    rel="noopener"
+    aria-label="Pedir por WhatsApp"
+  >
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </svg>
+  </a>
+
+  <!-- ═══════════════════════════════════════════════════════════
        FOOTER
-       TODO: Agregá WhatsApp, Instagram u otras redes.
-       Reemplazá XXXXXXXXXX con tu número (sin espacios ni +54).
+       TODO: Agregá link de WhatsApp, Instagram u otras redes.
+       Reemplazá XXXXXXXXXX con tu número.
        <a href="https://wa.me/54XXXXXXXXXX" style="color:var(--color-gold)">
          📲 Hacer pedido por WhatsApp
        </a>
-  ============================================================ -->
+  ═══════════════════════════════════════════════════════════ -->
   <footer>
     <p>© 2026 Crazy's Chicken &nbsp;·&nbsp; Todos los derechos reservados</p>
   </footer>
